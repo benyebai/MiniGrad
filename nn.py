@@ -41,11 +41,23 @@ class Neuron(Module):
         return self.weights + [self.bias]
 
 
+# u just take a bunch of neurons, throw the same input to all of em, and return their outputs
+class Layer(Module):
+    def __init__(self, input_size, output_size, nonlinear=True):
+        # so the size of each neuron is input_size
+        # and the amount of neurons is output size
+        self.neurons = [Neuron(input_size, nonlinear) for _ in range(output_size)]
 
-# TODO: Create a Layer containing a chosen number of Neuron objects.
-# TODO: Implement Layer.__call__() by passing the same inputs into every Neuron.
-# TODO: Return one Value for a one-neuron layer and a list for multiple neurons.
-# TODO: Make Layer.parameters() flatten and return every Neuron parameter.
+    # we take in the [x1, x2, x3]
+    def __call__(self, inputs: list[Value]):
+        return [n(inputs) for n in self.neurons]
+
+
+    def parameters(self) -> list[Value]:
+        total_params = []
+        for n in self.neurons:
+            total_params += n.parameters()
+        return total_params
 
 # TODO: Create an MLP from an input size and a list of output sizes per layer.
 # TODO: Make hidden MLP layers nonlinear and the final layer linear.
