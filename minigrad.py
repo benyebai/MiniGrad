@@ -1,15 +1,6 @@
 import math
 
 class Value:
-    # COMPLETED: Implement multiplication and its local gradients.
-    # COMPLETED: Implement powers such as x ** 2 and their local gradients.
-    # COMPELTED: Implement negation and subtraction.
-    # COMPLETED: Support operations between Value objects and Python scalars.
-    # COMPLETED: Implement one activation function, such as SILU.
-    # TODO: Test branching graphs such as y = x * x + x.
-    # TODO: Compare backward gradients against central finite differences.
-    # TODO: Build and train a tiny neuron with manual SGD updates.
-
     def __init__(self, value, children=(), name=""):
         self.value = value
         self.children = set(children)
