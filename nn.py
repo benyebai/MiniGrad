@@ -1,8 +1,9 @@
+from ast import Mod
+import enum
+
 from minigrad import Value
 import random
 
-# TODO: Create a Module base class with parameters() returning an empty list.
-# TODO: Add Module.zero_grad() to reset every parameter gradient to zero.
 
 class Module:
     # list of values that we will update
@@ -11,15 +12,35 @@ class Module:
 
     def zero_grad(self):
         for p in self.parameters():
-            p.grad
+            p.grad = 0.0
+
+# ok basically just something that looks like
+# Neuron([x1, x2, x3]) = (w1 * x1 + w2 * x2 + w3 * x3) + bias
+class Neuron(Module):
+    def __init__(self, size, nonlinear=True):
+        # weights can be negative
+        self.weights = [Value(random.uniform(-1, 1)) for _ in range(size)]
+        # default biases to 0
+        self.bias = Value(0.0)
+        self.nonlinear = nonlinear
+
+    # we take in the [x1, x2, x3]
+    def __call__(self, input: list[Value]):
+        activation = self.bias
+
+        # neater way, traverse weight and input at same time
+        for w, i in zip(self.weights, input):
+            activation += w * i
+
+        if self.nonlinear:
+            return activation.silu()
+
+        return activation
+
+    def parameters(self) -> list[Value]:
+        return self.weights + [self.bias]
 
 
-
-# TODO: Create a Neuron initialized with a chosen number of inputs.
-# TODO: Give each Neuron one random Value weight per input and one Value bias.
-# TODO: Implement Neuron.__call__() as sum(weight * input) + bias.
-# TODO: Apply SiLU when the Neuron is nonlinear and return the raw sum otherwise.
-# TODO: Make Neuron.parameters() return all weights followed by the bias.
 
 # TODO: Create a Layer containing a chosen number of Neuron objects.
 # TODO: Implement Layer.__call__() by passing the same inputs into every Neuron.
