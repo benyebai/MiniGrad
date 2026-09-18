@@ -131,12 +131,3 @@ class Value:
 
         for n in reversed(topologialReverseOrder):
             n._backward()
-
-
-
-x = Value(1, name='x')
-y = Value(2, name='y')
-z = x + y
-z.name = 'z'
-
-print(z.value)
